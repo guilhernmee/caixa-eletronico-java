@@ -47,7 +47,7 @@ Caixa Vazio: Chame o Operador
 
 A interface com o usuário é fornecida externamente e integrada ao programa por meio de um contrato de utilização (Programa 2), conforme especificação do projeto.
 
---
+---
 
 ## 📁 Estrutura do Projeto
 
