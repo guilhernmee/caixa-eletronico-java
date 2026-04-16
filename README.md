@@ -47,26 +47,7 @@ Caixa Vazio: Chame o Operador
 
 A interface com o usuário é fornecida externamente e integrada ao programa por meio de um contrato de utilização (Programa 2), conforme especificação do projeto.
 
----
-
-## 🚀 Como Executar
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/seu-usuario/caixa-eletronico.git
-```
-
-2. Compile o projeto:
-```bash
-javac App.java
-```
-
-3. Execute:
-```bash
-java App
-```
-
----
+--
 
 ## 📁 Estrutura do Projeto
 
@@ -89,4 +70,3 @@ caixa-eletronico/
 
 - O programa foi desenvolvido como exercício acadêmico de estruturas de repetição e controle de fluxo em Java.
 - A interface gráfica/textual foi fornecida pelo professor e integrada conforme o contrato de uso especificado.
-- 
