@@ -50,13 +50,15 @@ A interface com o usuário é fornecida externamente e integrada ao programa por
 ---
 
 ## 📁 Estrutura do Projeto
-
-```
-caixa-eletronico/
-├── App.java          # Classe principal com a lógica do caixa
-├── Interface.java    # Interface fornecida para interação com usuário
+````
+caixa-eletronico-java/
+├── src/
+│   └── caixaeletronico/
+│       ├── CaixaEletronico.java    # Classe principal com a lógica do caixa
+│       └── ICaixaEletronico.java   # Interface (contrato) fornecida pelo professor
+├── .gitignore
 └── README.md
-```
+````
 
 ---
 
