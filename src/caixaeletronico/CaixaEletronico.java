@@ -16,9 +16,17 @@ public class CaixaEletronico implements ICaixaEletronico {
     private int cotaMinima = 0;
 
     @Override
-    public String pegaValorTotalDisponivel() {
-        // TODO: implementar logica de soma total
-        return "";
+    public String pegaValorTotalDisponivel() { // método_ testado!!! TUDO OK
+        int total = 0;
+
+        for (int i = 0; i < cedulas.length; i++) {
+            // mostra a quantidade de notas do caixa
+            System.out.println("O caixa tem " + cedulas[i][1] + " notas de R$ " + cedulas[i][0]);
+
+            // soma o valor da nota x quantidade da nota
+            total += cedulas[i][0] * cedulas[i][1];
+        }
+        return "O total restante do caixa é de R$: " + total;
     }
 
     @Override
