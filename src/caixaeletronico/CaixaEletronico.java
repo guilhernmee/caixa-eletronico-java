@@ -41,9 +41,59 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String sacar(Integer valor) {
-        // TODO: implementar logica de saque (algoritmo guloso)
-        return "";
+        // Calcula o total disponível no caixa
+        int total = 0;
+        for (int i = 0; i < cedulas.length; i++) {
+            total += cedulas[i][0] * cedulas[i][1]; // O valor da nota multiplicado pela qtd disponivel
+        }
+
+        // Se o caixa está abaixo da cota mínima, encerra o atendimento
+        if (total <= cotaMinima) {
+            return "Caixa Vazio: Chame o Operador";
+        }
+
+        // Array temporário para guardar quantas notas de cada tipo serão usadas
+        // O desconto real só acontece depois de confirmar que o saque é possível
+        int[] notasUsadas = new int[cedulas.length];
+        int restante = valor;
+
+        // Tenta pagar com as maiores notas primeiro (100, 50, 20, 10, 5, 2)
+        for (int i = 0; i < cedulas.length; i++) {
+
+            // Só usa essa nota se ela couber no restante e houver quantidade disponível
+            if (cedulas[i][0] <= restante && cedulas[i][1] > 0) {
+
+                // Calcula quantas notas desse tipo são necessárias
+                int quantidade = restante / cedulas[i][0];
+
+                // Se precisar de mais notas do que tem disponível, usa só o que tem
+                if (quantidade > cedulas[i][1]) {
+                    quantidade = cedulas[i][1];
+                }
+
+                // Guarda temporariamente a quantidade usada e atualiza o restante
+                notasUsadas[i] = quantidade;
+                restante -= cedulas[i][0] * quantidade;
+            }
+        }
+
+        // Se após percorrer todas as notas ainda sobrou restante, o saque não é possível
+        if (restante != 0) {
+            return "Não Temos Notas Para Este Saque";
+        }
+
+        // Saque confirmado: desconta as notas do caixa e monta a resposta
+        String resposta = "=== Saque de R$ " + valor + " ===\n\n";
+        for (int i = 0; i < cedulas.length; i++) {
+            if (notasUsadas[i] > 0) {
+                cedulas[i][1] -= notasUsadas[i];
+                resposta += "R$ " + cedulas[i][0] + " x " + notasUsadas[i] + " notas\n";
+            }
+        }
+
+        return resposta;
     }
+
 
 
 
