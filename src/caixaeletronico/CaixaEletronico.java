@@ -55,8 +55,8 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String armazenaCotaMinima(Integer minimo) {
-        // TODO: implementar logica de armazenamento da cota minima
-        return "";
+        cotaMinima = minimo;
+        return "Cota mínima definida: R$ " + minimo;
     }
 
     public static void main(String[] args) {
