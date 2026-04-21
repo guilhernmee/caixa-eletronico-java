@@ -49,9 +49,24 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
-        // TODO: implementar logica de reposicao
-        return "";
+        // percorre a matriz procurando a cédula informada pelo usuário
+        for (int i = 0; i < cedulas.length; i++) {
+
+            // verifica se o valor da linha atual bate com a cédula solicitada
+            if (cedulas[i][0] == cedula) {
+
+                // soma a quantidade reposta à quantidade já existente na matriz
+                cedulas[i][1] += quantidade;
+
+                return "Reposição realizada! Nota R$ " + cedula +
+                        " agora tem " + cedulas[i][1] + " unidade(s).";
+            }
+        }
+
+        // Se chegar aqui, a cédula informada não existe no caixa
+        return "Cédula de R$ " + cedula + " não reconhecida.";
     }
+
 
     @Override
     public String armazenaCotaMinima(Integer minimo) {
