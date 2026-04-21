@@ -37,8 +37,16 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String pegaRelatorioCedulas() {
-        // TODO: implementar logica de relatorio
-        return "";
+        // inicia a string de resposta com um cabeçalho
+        String resposta = "=== Relatório de Cédulas ===\n";
+
+        // corre cada linha da matriz (cada tipo de cédula)
+        for (int i = 0; i < cedulas.length; i++) {
+            // cedulas[i][0] = valor da nota | cedulas[i][1] = quantidade disponível
+            resposta += "Nota R$ " + cedulas[i][0] + ": " + cedulas[i][1] + " unidade(s)\n";
+        }
+
+        return resposta;
     }
 
     @Override
