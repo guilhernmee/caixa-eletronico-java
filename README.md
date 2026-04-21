@@ -4,7 +4,7 @@ Programa desenvolvido em Java para simular o funcionamento de um caixa eletrôni
 
 ---
 
-## 📋 Descrição
+## 📋 Descrição do projeto
 
 O sistema simula um caixa eletrônico com 6 tipos de notas disponíveis: **R$ 2, R$ 5, R$ 10, R$ 20, R$ 50 e R$ 100**. O programa realiza o abastecimento inicial do caixa, entra em operação contínua atendendo clientes e gerencia o estoque de notas a cada saque realizado.
 
