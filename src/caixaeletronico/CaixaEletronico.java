@@ -117,7 +117,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         return "Cédula de R$ " + cedula + " não reconhecida.";
     }
 
-
+    // Salva o valor mínimo que o caixa precisa ter para continuar atendendo
     @Override
     public String armazenaCotaMinima(Integer minimo) {
         cotaMinima = minimo;
