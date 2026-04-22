@@ -41,8 +41,8 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String sacar(Integer valor) {
-        // Calcula o total disponível no caixa
         int total = 0;
+        // Calcula o total disponível no caixa
         for (int i = 0; i < cedulas.length; i++) {
             total += cedulas[i][0] * cedulas[i][1]; // O valor da nota multiplicado pela qtd disponivel
         }
@@ -79,7 +79,18 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         // Se após percorrer todas as notas ainda sobrou restante, o saque não é possível
         if (restante != 0) {
-            return "Não Temos Notas Para Este Saque";
+            return "Saque não realizado por falta de cédulas";
+        }
+
+        // Soma o total de cédulas que seriam emitidas neste saque
+        int totalCedulas = 0;
+        for (int i = 0; i < notasUsadas.length; i++) {
+            totalCedulas += notasUsadas[i];
+        }
+
+        // Não pode emitir mais de 30 cédulas em um único saque
+        if (totalCedulas > 30) {
+            return "Saque não realizado: excede o limite de 30 cédulas por operação";
         }
 
         // Saque confirmado: desconta as notas do caixa e monta a resposta
