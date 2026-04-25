@@ -1,5 +1,7 @@
 package caixaeletronico;
 
+import java.util.ArrayList;
+
 public class CaixaEletronico implements ICaixaEletronico {
 
     // Matriz 6x2: coluna 0 = valor da cedula, coluna 1 = quantidade disponivel
@@ -11,6 +13,8 @@ public class CaixaEletronico implements ICaixaEletronico {
             {5, 450},
             {2, 500}
     };
+
+    private ArrayList<String> historico = new ArrayList<>();
 
     // Valor minimo de cedulas que o caixa precisa manter para continuar operando
     private int cotaMinima = 0;
@@ -42,6 +46,12 @@ public class CaixaEletronico implements ICaixaEletronico {
     @Override
     public String sacar(Integer valor) {
         int total = 0;
+
+        // condicional de validação de valor
+        if (valor == null || valor <= 0) {
+            return "Valor inválido para saque";
+        }
+
         // Calcula o total disponível no caixa
         for (int i = 0; i < cedulas.length; i++) {
             total += cedulas[i][0] * cedulas[i][1]; // O valor da nota multiplicado pela qtd disponivel
@@ -102,14 +112,24 @@ public class CaixaEletronico implements ICaixaEletronico {
             }
         }
 
+        historico.add("SAQUE: R$ " + valor);
+
         return resposta;
     }
 
-
-
-
     @Override
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
+
+        // validação da quantidade e nota correta
+        if (quantidade == null || quantidade <= 0) {
+            return "Quantidade inválida";
+        }
+        if (cedula == null || cedula <= 0) {
+            return "Valor de cédula inválido";
+        }
+
+
+
         // percorre a matriz procurando a cédula informada pelo usuário
         for (int i = 0; i < cedulas.length; i++) {
 
@@ -119,10 +139,15 @@ public class CaixaEletronico implements ICaixaEletronico {
                 // soma a quantidade reposta à quantidade já existente na matriz
                 cedulas[i][1] += quantidade;
 
+                // Faz a gravação de reposição no arraylist
+                historico.add("REPOSIÇÃO: " + quantidade + " notas de R$ " + cedula);
+
                 return "Reposição realizada! Nota R$ " + cedula +
                         " agora tem " + cedulas[i][1] + " unidade(s).";
             }
         }
+
+
 
         // Se chegar aqui, a cédula informada não existe no caixa
         return "Cédula de R$ " + cedula + " não reconhecida.";
@@ -133,6 +158,15 @@ public class CaixaEletronico implements ICaixaEletronico {
     public String armazenaCotaMinima(Integer minimo) {
         cotaMinima = minimo;
         return "Cota mínima definida: R$ " + minimo;
+    }
+
+    public String geraExtrato() {
+        String extrato = "=== EXTRATO DO CAIXA ===\n\n";
+        for (int i = 0; i < historico.size(); i++) {
+            extrato += historico.get(i) + "\n";
+        }
+        extrato += "\n========================\n";
+        return extrato;
     }
 
     public static void main(String[] args) {
