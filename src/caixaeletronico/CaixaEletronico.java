@@ -1,5 +1,7 @@
 package caixaeletronico;
 
+import java.util.ArrayList;
+
 public class CaixaEletronico implements ICaixaEletronico {
 
     // Matriz 6x2: coluna 0 = valor da cedula, coluna 1 = quantidade disponivel
@@ -11,6 +13,8 @@ public class CaixaEletronico implements ICaixaEletronico {
             {5, 450},
             {2, 500}
     };
+
+    private ArrayList<String> historico = new ArrayList<>();
 
     // Valor minimo de cedulas que o caixa precisa manter para continuar operando
     private int cotaMinima = 0;
@@ -41,22 +45,128 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     @Override
     public String sacar(Integer valor) {
-        // TODO: implementar logica de saque (algoritmo guloso)
-        return "";
+        int total = 0;
+
+        // condicional de validação de valor
+        if (valor == null || valor <= 0) {
+            return "Valor inválido para saque";
+        }
+
+        // Calcula o total disponível no caixa
+        for (int i = 0; i < cedulas.length; i++) {
+            total += cedulas[i][0] * cedulas[i][1]; // O valor da nota multiplicado pela qtd disponivel
+        }
+
+        // Se o caixa está abaixo da cota mínima, encerra o atendimento
+        if (total <= cotaMinima) {
+            return "Caixa Vazio: Chame o Operador";
+        }
+
+        // Array temporário para guardar quantas notas de cada tipo serão usadas
+        // O desconto real só acontece depois de confirmar que o saque é possível
+        int[] notasUsadas = new int[cedulas.length];
+        int restante = valor;
+
+        // Tenta pagar com as maiores notas primeiro (100, 50, 20, 10, 5, 2)
+        for (int i = 0; i < cedulas.length; i++) {
+
+            // Só usa essa nota se ela couber no restante e houver quantidade disponível
+            if (cedulas[i][0] <= restante && cedulas[i][1] > 0) {
+
+                // Calcula quantas notas desse tipo são necessárias
+                int quantidade = restante / cedulas[i][0];
+
+                // Se precisar de mais notas do que tem disponível, usa só o que tem
+                if (quantidade > cedulas[i][1]) {
+                    quantidade = cedulas[i][1];
+                }
+
+                // Guarda temporariamente a quantidade usada e atualiza o restante
+                notasUsadas[i] = quantidade;
+                restante -= cedulas[i][0] * quantidade;
+            }
+        }
+
+        // Se após percorrer todas as notas ainda sobrou restante, o saque não é possível
+        if (restante != 0) {
+            return "Saque não realizado por falta de cédulas";
+        }
+
+        // Soma o total de cédulas que seriam emitidas neste saque
+        int totalCedulas = 0;
+        for (int i = 0; i < notasUsadas.length; i++) {
+            totalCedulas += notasUsadas[i];
+        }
+
+        // Não pode emitir mais de 30 cédulas em um único saque
+        if (totalCedulas > 30) {
+            return "Saque não realizado: excede o limite de 30 cédulas por operação";
+        }
+
+        // Saque confirmado: desconta as notas do caixa e monta a resposta
+        String resposta = "=== Saque de R$ " + valor + " ===\n\n";
+        for (int i = 0; i < cedulas.length; i++) {
+            if (notasUsadas[i] > 0) {
+                cedulas[i][1] -= notasUsadas[i];
+                resposta += "R$ " + cedulas[i][0] + " x " + notasUsadas[i] + " notas\n";
+            }
+        }
+
+        historico.add("SAQUE: R$ " + valor);
+
+        return resposta;
     }
-
-
 
     @Override
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
-        // TODO: implementar logica de reposicao
-        return "";
+
+        // validação da quantidade e nota correta
+        if (quantidade == null || quantidade <= 0) {
+            return "Quantidade inválida";
+        }
+        if (cedula == null || cedula <= 0) {
+            return "Valor de cédula inválido";
+        }
+
+
+
+        // percorre a matriz procurando a cédula informada pelo usuário
+        for (int i = 0; i < cedulas.length; i++) {
+
+            // verifica se o valor da linha atual bate com a cédula solicitada
+            if (cedulas[i][0] == cedula) {
+
+                // soma a quantidade reposta à quantidade já existente na matriz
+                cedulas[i][1] += quantidade;
+
+                // Faz a gravação de reposição no arraylist
+                historico.add("REPOSIÇÃO: " + quantidade + " notas de R$ " + cedula);
+
+                return "Reposição realizada! Nota R$ " + cedula +
+                        " agora tem " + cedulas[i][1] + " unidade(s).";
+            }
+        }
+
+
+
+        // Se chegar aqui, a cédula informada não existe no caixa
+        return "Cédula de R$ " + cedula + " não reconhecida.";
     }
 
+    // Salva o valor mínimo que o caixa precisa ter para continuar atendendo
     @Override
     public String armazenaCotaMinima(Integer minimo) {
         cotaMinima = minimo;
         return "Cota mínima definida: R$ " + minimo;
+    }
+
+    public String geraExtrato() {
+        String extrato = "=== EXTRATO DO CAIXA ===\n\n";
+        for (int i = 0; i < historico.size(); i++) {
+            extrato += historico.get(i) + "\n";
+        }
+        extrato += "\n========================\n";
+        return extrato;
     }
 
     public static void main(String[] args) {
