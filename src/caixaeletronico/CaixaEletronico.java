@@ -170,9 +170,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
     public static void main(String[] args) {
-        // TODO: descomentar quando a classe GUI estiver disponivel
-        // GUI janela = new GUI(CaixaEletronico.class);
-        // janela.show();
-
+        GUI janela = new GUI(CaixaEletronico.class);
+        janela.show();
     }
 }
