@@ -1,4 +1,4 @@
-# 🏧 Caixa Eletrônico — ATM Simulator
+# 🏧 Projeto Caixa Eletrônico
 
 Programa desenvolvido em Java para simular o funcionamento de um caixa eletrônico, controlando o estoque de notas e realizando saques de forma otimizada, com interface gráfica Swing.
 
