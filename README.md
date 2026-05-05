@@ -1,23 +1,28 @@
 # 🏧 Caixa Eletrônico — ATM Simulator
 
-Programa desenvolvido em Java para simular o funcionamento de um caixa eletrônico, controlando o estoque de notas e realizando saques de forma otimizada.
+Programa desenvolvido em Java para simular o funcionamento de um caixa eletrônico, controlando o estoque de notas e realizando saques de forma otimizada, com interface gráfica Swing.
 
 ---
 
-## 📋 Descrição do projeto
+## 📋 Descrição do Projeto
 
-O sistema simula um caixa eletrônico com 6 tipos de notas disponíveis: **R$ 2, R$ 5, R$ 10, R$ 20, R$ 50 e R$ 100**. O programa realiza o abastecimento inicial do caixa, entra em operação contínua atendendo clientes e gerencia o estoque de notas a cada saque realizado.
+O sistema simula um caixa eletrônico com 6 tipos de notas disponíveis: **R$ 2, R$ 5, R$ 10, R$ 20, R$ 50 e R$ 100**. O programa entra em operação contínua atendendo clientes, gerencia o estoque de notas a cada saque realizado e permite ao administrador realizar reposições e configurar a cota mínima de operação.
 
 ---
 
 ## ⚙️ Funcionalidades
 
-- Abastecimento inicial do caixa com quantidade definida de cada tipo de nota
-- Atendimento contínuo de clientes em sequência
-- Cálculo automático das notas a serem entregues, priorizando sempre as de **maior valor**
-- Decremento do estoque a cada saque realizado
-- Validação de saque antes de efetivá-lo
-- Emissão de mensagens de erro e alerta ao operador
+### Módulo do Cliente
+- **Efetuar Saque** — o cliente informa o valor desejado e o sistema entrega as notas de forma otimizada
+
+### Módulo do Administrador
+- **Relatório de Cédulas** — exibe a quantidade disponível de cada tipo de nota
+- **Valor Total Disponível** — exibe o saldo total em reais no caixa
+- **Reposição de Cédulas** — permite adicionar notas ao estoque do caixa
+- **Cota Mínima** — define o valor mínimo que o caixa precisa ter para continuar operando
+
+### Módulo de Ambos
+- **Sair** — encerra o atendimento e exibe o extrato completo de todas as operações realizadas
 
 ---
 
@@ -29,46 +34,80 @@ O programa sempre tenta pagar com as **maiores notas possíveis**, seguindo a or
 R$ 100 → R$ 50 → R$ 20 → R$ 10 → R$ 5 → R$ 2
 ```
 
-Antes de confirmar o saque, o sistema verifica se é possível atender ao valor solicitado com as notas disponíveis. Caso não seja possível, exibe a mensagem:
+Antes de confirmar o saque, o sistema:
 
-```
-Não Temos Notas Para Este Saque
-```
+1. Simula o pagamento em um array temporário sem alterar o estoque real
+2. Verifica se é possível atender ao valor exato com as notas disponíveis
+3. Verifica se o número de notas não ultrapassa o **limite de 30 cédulas por operação**
+4. Só desconta o estoque após todas as validações passarem
 
-Caso o caixa fique abaixo do estoque mínimo, o atendimento é encerrado e o sistema exibe:
+Mensagens de controle:
 
-```
-Caixa Vazio: Chame o Operador
-```
+| Situação | Mensagem exibida |
+|---|---|
+| Notas insuficientes para o valor | `Saque não realizado por falta de cédulas` |
+| Mais de 30 cédulas necessárias | `Saque não realizado: excede o limite de 30 cédulas por operação` |
+| Caixa abaixo da cota mínima | `Caixa Vazio: Chame o Operador` |
 
 ---
 
-## 🖥️ Interface
+## 💾 Estoque Inicial
 
-A interface com o usuário é fornecida externamente e integrada ao programa por meio de um contrato de utilização (Programa 2), conforme especificação do projeto.
+O caixa inicia com as seguintes quantidades, conforme especificação do projeto:
+
+| Cédula | Quantidade inicial |
+|---|---|
+| R$ 100 | 100 |
+| R$ 50  | 200 |
+| R$ 20  | 300 |
+| R$ 10  | 350 |
+| R$ 5   | 450 |
+| R$ 2   | 500 |
+
+---
+
+## 🖥️ Interface Gráfica
+
+A interface foi desenvolvida em **Java Swing** e segue o layout especificado no enunciado do projeto. A `GUI` se comunica com a lógica do caixa exclusivamente através da interface `ICaixaEletronico`, garantindo o desacoplamento entre tela e regras de negócio.
+
+Ao clicar em **Sair**, o sistema exibe automaticamente um extrato com todas as operações realizadas na sessão (saques e reposições).
 
 ---
 
 ## 📁 Estrutura do Projeto
-````
+
+```
 caixa-eletronico-java/
 ├── src/
 │   └── caixaeletronico/
-│       ├── CaixaEletronico.java    # Classe principal com a lógica do caixa
-│       └── ICaixaEletronico.java   # Interface (contrato) fornecida pelo professor
+│       ├── CaixaEletronico.java    # Lógica principal do caixa eletrônico
+│       ├── ICaixaEletronico.java   # Interface (contrato) fornecida pelo professor
+│       └── GUI.java                # Interface gráfica Swing
 ├── .gitignore
 └── README.md
-````
+```
 
 ---
 
 ## 🛠️ Tecnologias
 
-- Java (JDK 8+)
+- Java JDK 8+
+- Java Swing (interface gráfica)
+
+---
+
+## ▶️ Como Executar
+
+1. Clone o repositório
+2. Abra o projeto no **IntelliJ IDEA** (ou outra IDE Java)
+3. Execute o método `main` da classe `CaixaEletronico`
+4. A janela do caixa eletrônico será aberta automaticamente
 
 ---
 
 ## 📌 Observações
 
-- O programa foi desenvolvido como exercício acadêmico de estruturas de repetição e controle de fluxo em Java.
-- A interface gráfica/textual foi fornecida pelo professor e integrada conforme o contrato de uso especificado.
+- Projeto desenvolvido como exercício acadêmico da disciplina de **Programação Orientada a Objetos**
+- A interface `ICaixaEletronico` foi fornecida pelo professor e não pode ser alterada
+- A classe `GUI` implementa a tela seguindo o contrato definido na interface
+- O extrato exibido ao sair registra todos os saques e reposições da sessão
